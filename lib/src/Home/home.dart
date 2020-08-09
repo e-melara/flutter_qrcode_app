@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qrcodeapp/src/Home/Direccion/direccion_page.dart';
-import 'package:qrcodeapp/src/Home/Mapa/map_page.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+
+import './Mapa/map_page.dart';
+import './Direccion/direccion_page.dart';
 import './widgets/bottom_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: routePageNavigationCall(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: onScanCamera,
         child: Icon(Icons.filter_center_focus),
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -48,6 +50,16 @@ class _HomePageState extends State<HomePage> {
         return new DireccionPage();
       default:
         return new MapPage();
+    }
+  }
+
+  void onScanCamera() async {
+    String resultScan = '';
+
+    try {
+      var result = await BarcodeScanner.scan();
+    } catch (e) {
+      resultScan = e;
     }
   }
 }
