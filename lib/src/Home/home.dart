@@ -54,12 +54,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onScanCamera() async {
-    String resultScan = '';
+    var resultScan;
 
     try {
-      var result = await BarcodeScanner.scan();
+      resultScan = await BarcodeScanner.scan();
     } catch (e) {
       resultScan = e;
     }
+
+    print(resultScan);
   }
 }
