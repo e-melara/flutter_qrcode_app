@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+// import 'package:barcode_scan/barcode_scan.dart';
 
 import './Mapa/map_page.dart';
+import './blocs/scans_bloc.dart';
 import './Direccion/direccion_page.dart';
 import './widgets/bottom_navigation_bar.dart';
+import 'package:qrcodeapp/src/models/scan.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int pageCurrent = 0;
+  final ScansBloc _scansBloc = new ScansBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('QrCode app'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.delete_forever), onPressed: () {})
+          IconButton(
+            icon: Icon(Icons.delete_forever),
+            onPressed: () {
+              _scansBloc.deleteAll();
+            },
+          )
         ],
       ),
       body: routePageNavigationCall(),
@@ -54,14 +62,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onScanCamera() async {
-    var resultScan;
+    final String resultScan = 'https://www.google.com';
 
-    try {
-      resultScan = await BarcodeScanner.scan();
-    } catch (e) {
-      resultScan = e;
+    if (resultScan != null) {
+      final _scan = new Scan(valor: resultScan);
+      _scansBloc.add(_scan);
     }
 
-    print(resultScan);
+    // try {
+    //   resultScan = await BarcodeScanner.scan();
+    // } catch (e) {
+    //   resultScan = e;
+    // }
+
+    // print(resultScan);
   }
 }

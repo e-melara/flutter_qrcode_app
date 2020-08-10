@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:qrcodeapp/src/models/scan.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:qrcodeapp/src/models/scan.dart';
+export 'package:qrcodeapp/src/models/scan.dart';
 
 class DbProvider {
   static Database _database;
@@ -22,7 +24,7 @@ class DbProvider {
     final Directory documentsDirectory =
         await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'ScanDB.db');
-    await openDatabase(
+    return await openDatabase(
       path,
       version: 1,
       onOpen: (db) {},
@@ -41,15 +43,15 @@ class DbProvider {
 
   Future<int> add(Scan scan) async {
     final db = await database;
+    print(db);
     return await db.insert('Scans', scan.toJson());
   }
 
   Future<List<Scan>> getAll() async {
     final db = await database;
     final rows = await db.query('Scans');
-
     if (rows.isNotEmpty) {
-      return rows.map((c) => Scan.fromJson(c));
+      return rows.map((c) => Scan.fromJson(c)).toList();
     }
     return [];
   }
