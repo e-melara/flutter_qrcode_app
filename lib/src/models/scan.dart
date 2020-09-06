@@ -26,4 +26,11 @@ class Scan {
       'valor': this.valor,
     };
   }
+
+  getLanLng() {
+    final lanlng = this.valor.substring(4).split(',');
+    final lan = double.parse(lanlng[0]);
+    final lng = double.parse(lanlng[1]);
+    return "$lan $lng";
+  }
 }

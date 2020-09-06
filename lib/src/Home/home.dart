@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // import 'package:barcode_scan/barcode_scan.dart';
 
-import './Mapa/map_page.dart';
+import 'Mapa/maps_page.dart';
 import './blocs/scans_bloc.dart';
 import './Direccion/direccion_page.dart';
 import './widgets/bottom_navigation_bar.dart';
 import 'package:qrcodeapp/src/models/scan.dart';
+import 'package:qrcodeapp/src/utils.dart' as utils;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -34,7 +37,9 @@ class _HomePageState extends State<HomePage> {
       ),
       body: routePageNavigationCall(),
       floatingActionButton: FloatingActionButton(
-        onPressed: onScanCamera,
+        onPressed: () {
+          onScanCamera(context);
+        },
         child: Icon(Icons.filter_center_focus),
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -53,20 +58,28 @@ class _HomePageState extends State<HomePage> {
   Widget routePageNavigationCall() {
     switch (this.pageCurrent) {
       case 0:
-        return new MapPage();
+        return new MapsPage();
       case 1:
         return new DireccionPage();
       default:
-        return new MapPage();
+        return new MapsPage();
     }
   }
 
-  void onScanCamera() async {
-    final String resultScan = 'https://www.google.com';
+  void onScanCamera(BuildContext context) async {
+    final String resultScan = 'geo:40.724233047051,-74.007314591';
 
     if (resultScan != null) {
       final _scan = new Scan(valor: resultScan);
       _scansBloc.add(_scan);
+
+      if (Platform.isIOS) {
+        Future.delayed(Duration(milliseconds: 750), () {
+          utils.openLaunch(_scan, context);
+        });
+      } else {
+        await utils.openLaunch(_scan, context);
+      }
     }
 
     // try {
